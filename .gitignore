@@ -1,0 +1,34 @@
+# Runtime state and generated workflow output
+.agents/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# Dependencies and package manager caches
+node_modules/
+.npm/
+.pnpm-store/
+
+# Environment and local machine config
+.env
+.env.*
+!.env.example
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Test and coverage output
+coverage/
+.nyc_output/

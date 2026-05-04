@@ -1,0 +1,52 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "name": "factory-init-state",
+            "type": "command",
+            "command": "node \"${extensionPath}${/}hooks${/}init-workflow.js\" \"${workspacePath}\""
+          }
+        ]
+      }
+    ],
+    "BeforeAgent": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "name": "factory-guard-context",
+            "type": "command",
+            "command": "node \"${extensionPath}${/}hooks${/}workflow-context.js\" \"${workspacePath}\""
+          }
+        ]
+      }
+    ],
+    "BeforeTool": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "name": "factory-phase-gate",
+            "type": "command",
+            "command": "node \"${extensionPath}${/}hooks${/}phase-gate.js\" \"${workspacePath}\""
+          }
+        ]
+      }
+    ],
+    "AfterAgent": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "name": "factory-checkpoint-validator",
+            "type": "command",
+            "command": "node \"${extensionPath}${/}hooks${/}validate-checkpoint.js\" \"${workspacePath}\""
+          }
+        ]
+      }
+    ]
+  }
+}

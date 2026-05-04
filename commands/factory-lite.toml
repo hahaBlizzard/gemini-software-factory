@@ -1,0 +1,10 @@
+[command]
+description = "Start a streamlined software factory workflow (ceo -> dev -> tester)."
+prompt = """
+[SYSTEM: SOFTWARE FACTORY LITE ACTIVATED]
+The user has initiated a streamlined software factory run.
+<user_requirement>
+{{args}}
+</user_requirement>
+Please pass this to the workflow system.
+"""

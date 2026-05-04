@@ -1,0 +1,11 @@
+description = "Initialize the software factory working directories and workflow state."
+prompt = """
+[SYSTEM: SWARM INITIALIZATION]
+You are the initialization specialist. Execute the following:
+1. Ensure `.agents/logs` and `.agents/outputs` exist.
+2. Ensure `.agents/logs/evolution.jsonl` exists. If missing, write:
+   {"id":"bootstrap-memory-v1","timestamp":"2026-04-24T00:00:00Z","type":"system","phase":"system","topic":"bootstrap","tags":["memory","init"],"severity":"low","trigger":"initialization","summary":"Evolution memory initialized.","action_rule":"Read evolution.jsonl before planning or coding when relevant memories exist.","reuse_hint":"Use as a bootstrap record only.","outcome":"initialized"}
+3. Ensure `.agents/workflow-state.json` exists and reset it to an idle state.
+4. Final output must be exactly this single sentence:
+   初始化完成。使用 /factory-run <需求> 启动软件工厂。
+"""

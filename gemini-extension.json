@@ -1,0 +1,17 @@
+{
+  "name": "software-factory-agent",
+  "version": "2.1.0",
+  "description": "A guarded multi-agent workflow extension with phase checkpoints.",
+  "author": "hahaBlizzard",
+  "contextFileName": "GEMINI.md",
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "${workspacePath}"
+      ]
+    }
+  }
+}

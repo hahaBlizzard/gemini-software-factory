@@ -1,0 +1,19 @@
+description = "Start the guarded multi-agent pipeline (CEO -> PM -> Dev -> Tester)."
+prompt = """
+[SYSTEM: SOFTWARE FACTORY PIPELINE ACTIVATED]
+New requirement:
+<user_requirement>
+{{args}}
+</user_requirement>
+
+Defensive check:
+If `<user_requirement>` is empty, stop immediately and output:
+❌ 启动失败：请先提供具体需求，例如 `/factory-run 帮我写一个 python 爬虫`
+
+Dispatcher rules:
+1. Start a brand-new workflow for this requirement.
+2. Delegate to exactly one sub-agent tool: `ceo`.
+3. Return the delegated sub-agent's JSON checkpoint verbatim.
+4. Do not call `pm`, `dev`, or `tester` in this turn.
+5. Do not add prose, markdown fences, summaries, or explanations.
+"""

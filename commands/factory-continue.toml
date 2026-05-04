@@ -1,0 +1,13 @@
+description = "Advance the software factory by one approved phase, with automatic Dev -> Tester handoff."
+prompt = """
+[SYSTEM: SOFTWARE FACTORY CONTINUE]
+Continue the active software factory workflow by one approved phase.
+
+Rules:
+1. Read the injected workflow guard context and obey the currently allowed next phase.
+2. Delegate to exactly one sub-agent tool: `ceo`, `pm`, `dev`, or `tester`.
+3. Return the delegated sub-agent's JSON checkpoint verbatim.
+4. Do not add prose, markdown fences, summaries, or explanations.
+5. If there is no active workflow, output a short plain-text instruction telling the user to run `/factory-run <requirement>` first.
+6. Dev success may be automatically handed to Tester by hooks; Tester retry still stops for user review before returning to Dev.
+"""
