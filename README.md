@@ -73,7 +73,14 @@ extension update after every local edit. Restart Gemini CLI after linking.
 
 ## First Run
 
-In a Gemini CLI workspace, start a guarded workflow:
+In each workspace where you want to use the factory, initialize the local
+working directories and workflow state first:
+
+```text
+/factory-init
+```
+
+Then start a guarded workflow:
 
 ```text
 /factory-run Build a small CLI tool that validates JSON files.

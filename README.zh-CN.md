@@ -65,7 +65,13 @@ gemini extensions link .
 
 ## 第一次运行
 
-在 Gemini CLI workspace 中启动受保护工作流：
+在每个需要使用 factory 的 Gemini CLI workspace 中，先初始化本地工作目录和 workflow state：
+
+```text
+/factory-init
+```
+
+然后启动受保护工作流：
 
 ```text
 /factory-run Build a small CLI tool that validates JSON files.
