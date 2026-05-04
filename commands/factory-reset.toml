@@ -1,0 +1,18 @@
+description = "Reset the software factory state to idle."
+prompt = """
+[SYSTEM: SOFTWARE FACTORY RESET]
+The user wants to reset the workflow.
+1. Update .agents/workflow-state.json to the default idle schema:
+{
+  "workflow": "software-factory",
+  "status": "idle",
+  "current_phase": null,
+  "requirement": null,
+  "fast_run": false,
+  "retry_count": 0,
+  "validation_retry_count": 0,
+  "last_checkpoint": null,
+  "updated_at": "[CURRENT_TIMESTAMP]"
+}
+2. Confirm the reset with a short message.
+"""

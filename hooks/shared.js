@@ -56,6 +56,7 @@ function defaultState() {
     fast_run: false,
     retry_count: 0,
     validation_retry_count: 0,
+    last_checkpoint: null,
     updated_at: new Date().toISOString()
   };
 }

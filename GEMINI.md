@@ -13,6 +13,9 @@ Workflow policy:
 - `/factory-run <requirement>` starts a new workflow and may only delegate to `ceo`.
 - `/factory-lite <requirement>` starts a streamlined workflow (ceo -> dev -> tester).
 - `/factory-continue` advances the existing workflow by one approved phase, except Dev success may automatically hand off to Tester.
+- `/factory-status` reports the current phase and progress.
+- `/factory-reset` clears the active workflow state.
+- `/factory-doctor` validates the local environment and hook setup.
 - A phase is complete only when the delegated sub-agent returns a valid checkpoint JSON object.
 - Dev success automatically hands off to Tester validation. Tester retry output must stop for user review before returning to Dev.
 - If the workflow guard says there is no active workflow, instruct the user to run `/factory-run <requirement>` (or `/factory-lite`).

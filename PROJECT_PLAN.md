@@ -64,9 +64,9 @@ Outcome: another user can install, understand, and debug the extension.
 - [ ] Add a short demo transcript for `/factory-run` and `/factory-continue`.
 - [x] Add license file.
 - [ ] Verify UTF-8 rendering for prompts, agents, and commands.
-- [ ] Add `/factory-status`.
-- [ ] Add `/factory-reset`.
-- [ ] Add `/factory-doctor`.
+- [x] Add `/factory-status`.
+- [x] Add `/factory-reset`.
+- [x] Add `/factory-doctor`.
 
 Done when: the extension can be linked or installed fresh and the user can
 diagnose common setup problems without reading source code.

@@ -49,6 +49,21 @@ function main() {
   const isRunCommand = (slash && slash.command === 'factory-run') || lastUserText.includes('[SYSTEM: SOFTWARE FACTORY PIPELINE ACTIVATED]');
   const isLiteCommand = (slash && slash.command === 'factory-lite') || lastUserText.includes('[SYSTEM: SOFTWARE FACTORY LITE ACTIVATED]');
   const isContinueCommand = (slash && slash.command === 'factory-continue');
+  const isManagementCommand = slash && ['factory-status', 'factory-reset', 'factory-doctor'].includes(slash.command);
+
+  // If management command, bypass injection to avoid forced sub-agent delegation
+  if (isManagementCommand) {
+    if (slash.command === 'factory-reset') {
+      const resetState = defaultState();
+      resetState.management_command = 'factory-reset';
+      writeState(resetState);
+    } else if (state) {
+      state.management_command = slash.command;
+      writeState(state);
+    }
+    console.log(JSON.stringify({}));
+    return;
+  }
 
   // If no state and not starting a workflow, be silent
   if (!state && !isInitCommand && !isRunCommand && !isLiteCommand && !isContinueCommand) {

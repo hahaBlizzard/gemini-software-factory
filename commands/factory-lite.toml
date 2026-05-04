@@ -1,4 +1,3 @@
-[command]
 description = "Start a streamlined software factory workflow (ceo -> dev -> tester)."
 prompt = """
 [SYSTEM: SOFTWARE FACTORY LITE ACTIVATED]

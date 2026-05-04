@@ -1,0 +1,13 @@
+description = "Display the current state and phase of the software factory workflow."
+prompt = """
+[SYSTEM: SOFTWARE FACTORY STATUS]
+Show the current workflow status.
+Read the .agents/workflow-state.json file and summarize:
+1. Current Phase (current_phase)
+2. Workflow Status (status)
+3. Last Checkpoint (last_checkpoint)
+4. Active Requirement (requirement)
+5. Retry Counts (retry_count, validation_retry_count)
+
+If the file does not exist, tell the user to run /factory-init.
+"""

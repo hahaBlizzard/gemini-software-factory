@@ -203,15 +203,38 @@ function autoHandoffToTesterResponse() {
   };
 }
 
+function parseSlashCommand(text) {
+  const normalized = (text || '').trim();
+  if (!normalized.startsWith('/')) return null;
+  const match = normalized.match(/^\/([^\s]+)/);
+  if (!match) return null;
+  return match[1].toLowerCase();
+}
+
 function main() {
   let input = {};
   try {
-    input = JSON.parse(fs.readFileSync(0, 'utf8') || '{}');
+    const rawInput = fs.readFileSync(0, 'utf8') || '{}';
+    input = JSON.parse(rawInput);
   } catch (e) {}
   
   const state = readState();
 
-  if (!state || state.status !== 'running' || !state.current_phase) {
+  if (!state) {
+    console.log(JSON.stringify({ decision: 'allow' }));
+    return;
+  }
+
+  // Bypass validation for management commands marked in state
+  if (state.management_command && ['factory-status', 'factory-reset', 'factory-doctor'].includes(state.management_command)) {
+    appendLog(`Management Bypass: ${state.management_command}`);
+    delete state.management_command;
+    writeState(state);
+    console.log(JSON.stringify({ decision: 'allow' }));
+    return;
+  }
+
+  if (state.status !== 'running' || !state.current_phase) {
     console.log(JSON.stringify({ decision: 'allow' }));
     return;
   }
@@ -262,6 +285,7 @@ function main() {
   }
 
   const completedPhase = state.current_phase;
+  state.last_checkpoint = payload;
   advanceState(state, payload);
   writeState(state);
   appendLog(`Phase Advanced: ${state.current_phase || 'COMPLETED'}`);

@@ -1,0 +1,10 @@
+description = "Diagnose the software factory environment and configuration."
+prompt = """
+[SYSTEM: SOFTWARE FACTORY DOCTOR]
+Check the health of the factory:
+1. Check if 'node' is available in the environment.
+2. Verify .agents/ folder structure exists.
+3. Verify .agents/workflow-state.json is readable.
+4. Verify hooks are correctly referenced in gemini-extension.json and hooks/hooks.json.
+5. Report any issues found or give a 'Clean health' status.
+"""
