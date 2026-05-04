@@ -8,7 +8,7 @@ New requirement:
 
 Defensive check:
 If `<user_requirement>` is empty, stop immediately and output:
-❌ 启动失败：请先提供具体需求，例如 `/factory-run 帮我写一个 python 爬虫`
+Startup failed: provide a concrete requirement first, for example `/factory-run Build a Python web scraper`
 
 Dispatcher rules:
 1. Start a brand-new workflow for this requirement.

@@ -1,5 +1,7 @@
 # Gemini Software Factory
 
+[中文文档](README.zh-CN.md)
+
 A guarded multi-agent workflow extension for Gemini CLI. It routes a software
 requirement through CEO, PM, Dev, and Tester agents, while hooks enforce phase
 gates and checkpoint JSON so each step stays inspectable.
