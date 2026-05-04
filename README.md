@@ -1,6 +1,6 @@
 # Gemini Software Factory
 
-[中文文档](README.zh-CN.md)
+[Chinese documentation](README.zh-CN.md)
 
 A guarded multi-agent workflow extension for Gemini CLI. It routes a software
 requirement through CEO, PM, Dev, and Tester agents, while hooks enforce phase
@@ -34,17 +34,42 @@ PROJECT_PLAN.md         Productization and roadmap checklist
 The extension hooks are plain Node.js scripts and do not require npm
 dependencies.
 
-## Install Or Link
+## Install
 
-Clone the repository:
+Install directly from GitHub:
+
+```powershell
+gemini extensions install https://github.com/hahaBlizzard/gemini-software-factory
+```
+
+Restart Gemini CLI after installation so the extension commands and hooks are
+loaded.
+
+You can verify the extension from your terminal:
+
+```powershell
+gemini extensions list
+```
+
+Or from inside Gemini CLI:
+
+```text
+/extensions list
+```
+
+## Local Development
+
+If you want to develop or test local changes, clone the repository and link the
+extension folder:
 
 ```powershell
 git clone https://github.com/hahaBlizzard/gemini-software-factory.git
+cd gemini-software-factory
+gemini extensions link .
 ```
 
-Then link or install the extension using your Gemini CLI extension workflow. If
-you are developing locally, link this repository's root folder as the extension
-folder.
+Linking points Gemini CLI at your local checkout, so you do not need to run an
+extension update after every local edit. Restart Gemini CLI after linking.
 
 ## First Run
 

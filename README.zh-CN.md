@@ -29,15 +29,39 @@ PROJECT_PLAN.md         产品化和路线图 checklist
 
 本扩展的 hooks 是普通 Node.js 脚本，不需要 npm 依赖。
 
-## 安装或链接
+## 安装
 
-克隆仓库：
+直接从 GitHub 安装：
+
+```powershell
+gemini extensions install https://github.com/hahaBlizzard/gemini-software-factory
+```
+
+安装后重启 Gemini CLI，这样扩展命令和 hooks 才会被加载。
+
+可以在系统终端中验证扩展：
+
+```powershell
+gemini extensions list
+```
+
+也可以在 Gemini CLI 内部验证：
+
+```text
+/extensions list
+```
+
+## 本地开发
+
+如果你想开发或测试本地改动，可以克隆仓库并链接扩展目录：
 
 ```powershell
 git clone https://github.com/hahaBlizzard/gemini-software-factory.git
+cd gemini-software-factory
+gemini extensions link .
 ```
 
-然后按照你的 Gemini CLI 扩展工作流链接或安装该扩展。开发时，可以把本仓库根目录作为 extension folder 链接。
+`link` 会让 Gemini CLI 使用你的本地 checkout，因此每次本地编辑后不需要运行 extension update。链接后请重启 Gemini CLI。
 
 ## 第一次运行
 
