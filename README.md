@@ -14,6 +14,7 @@ gates and checkpoint JSON so each step stays inspectable.
 - Blocks the wrong agent from running in the wrong phase.
 - Validates each agent checkpoint before the workflow can move on.
 - Automatically hands off successful Dev work to Tester validation.
+- Writes human-readable artifacts and a final `/factory-report`.
 
 ## Project Structure
 
@@ -102,6 +103,32 @@ For a shorter path, use:
 /factory-lite Build a small CLI tool that validates JSON files.
 ```
 
+## Demo Transcript
+
+```text
+> /factory-init
+Initialization complete. Use /factory-run <requirement> to start the software factory.
+
+> /factory-run Build a small CLI tool that validates JSON files.
+{"current_phase":"ceo","status":"WAITING_FOR_USER_APPROVAL","checkpoint":"CEO_BLUEPRINT_READY","next_command":"/factory-continue","message":"CEO blueprint and architecture snapshot are ready."}
+
+> /factory-continue
+{"current_phase":"pm","status":"WAITING_FOR_USER_APPROVAL","checkpoint":"PM_PRD_READY","next_command":"/factory-continue","message":"PRD and acceptance criteria are ready."}
+
+> /factory-continue
+{"current_phase":"dev","status":"WAITING_FOR_USER_APPROVAL","checkpoint":"DEV_IMPLEMENTATION_COMPLETED","next_command":"auto:tester","message":"Implementation summary is ready; Tester will validate automatically."}
+
+> auto handoff
+{"current_phase":"tester","status":"FACTORY_WORKFLOW_COMPLETED","checkpoint":"TESTER_PASS","result":"PASS","message":"Tester accepted the implementation."}
+
+> /factory-report
+Report written to .agents/outputs/factory_report.md.
+```
+
+If Tester returns `RETRY_REQUIRED`, review `.agents/outputs/test_report.md`
+and run `/factory-continue` only after you are ready to send the task back to
+Dev.
+
 ## Workflow
 
 The default workflow is:
@@ -113,6 +140,20 @@ CEO -> PM -> Dev -> Tester
 Each agent must return a valid JSON checkpoint. Hooks inject the current
 workflow context, block invalid phase transitions, and validate checkpoint
 output after each agent run.
+
+Each phase also writes a Markdown artifact under `.agents/outputs/`:
+
+- `architecture_snapshot.md`
+- `prd.md`
+- `implementation_summary.md`
+- `test_report.md`
+- `factory_report.md`
+
+## Encoding Note
+
+Repository prompts, commands, and documentation are UTF-8. If Chinese text in
+PowerShell appears as mojibake, it is usually terminal decoding rather than file
+corruption; the files should decode without `U+FFFD` replacement characters.
 
 ## Roadmap
 

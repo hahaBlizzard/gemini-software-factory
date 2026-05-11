@@ -24,6 +24,18 @@
         ]
       }
     ],
+    "BeforeToolSelection": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "name": "factory-tool-selection",
+            "type": "command",
+            "command": "node \"${extensionPath}${/}hooks${/}tool-selection.js\" \"${workspacePath}\""
+          }
+        ]
+      }
+    ],
     "BeforeTool": [
       {
         "matcher": "*",

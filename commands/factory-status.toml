@@ -8,6 +8,8 @@ Read the .agents/workflow-state.json file and summarize:
 3. Last Checkpoint (last_checkpoint)
 4. Active Requirement (requirement)
 5. Retry Counts (retry_count, validation_retry_count)
+6. Workflow/phase timestamps (workflow_started_at, phase_started_at, phase_completed_at)
+7. Artifact paths in .agents/outputs/
 
 If the file does not exist, tell the user to run /factory-init.
 """

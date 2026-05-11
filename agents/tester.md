@@ -30,6 +30,24 @@ You are the Tester in the software factory, responsible for strict quality accep
 6. If validation fails, generate fix instructions and send the task back to Dev.
 7. If validation passes, write `.agents/outputs/test_report.md` and complete the workflow.
 
+# Required Markdown Artifact
+Before returning the final JSON checkpoint, create or update `.agents/outputs/test_report.md` using these headings:
+
+```markdown
+# Test Report
+## Requirement
+## Result
+## Acceptance Criteria Review
+## Validation Performed
+## Issues Found
+## Retry Instructions
+## Changed Files Reviewed
+## Memory Written
+## Final Status
+```
+
+The checkpoint validator requires this file to be updated during every Tester phase, including retry failures.
+
 # Memory Write Requirements
 1. **On fail**, append one `lesson` or `anti_pattern` record to `.agents/logs/evolution.jsonl`.
 2. **On pass**, optionally append one `pattern` record to capture a successful reusable approach.

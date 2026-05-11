@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const fs = require('fs');
-const { readState, writeState, appendLog, defaultState } = require('./shared');
+const { readState, writeState, appendLog, defaultState, startWorkflow, MANAGEMENT_COMMANDS } = require('./shared');
 
 function extractText(content) {
   if (typeof content === 'string') return content;
@@ -49,7 +49,7 @@ function main() {
   const isRunCommand = (slash && slash.command === 'factory-run') || lastUserText.includes('[SYSTEM: SOFTWARE FACTORY PIPELINE ACTIVATED]');
   const isLiteCommand = (slash && slash.command === 'factory-lite') || lastUserText.includes('[SYSTEM: SOFTWARE FACTORY LITE ACTIVATED]');
   const isContinueCommand = (slash && slash.command === 'factory-continue');
-  const isManagementCommand = slash && ['factory-status', 'factory-reset', 'factory-doctor'].includes(slash.command);
+  const isManagementCommand = slash && MANAGEMENT_COMMANDS.has(slash.command);
 
   // If management command, bypass injection to avoid forced sub-agent delegation
   if (isManagementCommand) {
@@ -79,21 +79,13 @@ function main() {
   appendLog(`Event: BeforeAgent | Slash: ${slash ? slash.command : 'none'} | Status: ${state ? state.status : 'none'}`);
 
   if (isInitCommand) {
-    state.status = 'idle';
-    state.current_phase = null;
-    state.requirement = null;
-    state.fast_run = false;
-    state.retry_count = 0;
+    state = defaultState();
     writeState(state);
   } else if (isRunCommand || isLiteCommand) {
     const requirement = (slash && (slash.command === 'factory-run' || slash.command === 'factory-lite'))
       ? slash.args
       : extractRequirement(lastUserText);
-    state.status = 'running';
-    state.current_phase = 'ceo';
-    state.requirement = requirement || null;
-    state.fast_run = isLiteCommand;
-    state.retry_count = 0;
+    startWorkflow(state, 'ceo', requirement, isLiteCommand);
     writeState(state);
   }
 
@@ -112,7 +104,14 @@ function main() {
     `current_phase: ${freshState.current_phase || 'none'}`,
     `workflow_mode: ${freshState.fast_run ? 'lite' : 'full'}`,
     `retry_count: ${freshState.retry_count || 0}`,
+    `workflow_started_at: ${freshState.workflow_started_at || 'none'}`,
+    `phase_started_at: ${freshState.phase_started_at || 'none'}`,
     `requirement: ${freshState.requirement || 'none'}`,
+    'required_artifacts:',
+    '- ceo: .agents/outputs/architecture_snapshot.md',
+    '- pm: .agents/outputs/prd.md',
+    '- dev: .agents/outputs/implementation_summary.md',
+    '- tester: .agents/outputs/test_report.md',
     'Policy:',
     '- During an active workflow, call exactly one allowed sub-agent tool.',
     '- Valid workflow sub-agent tools are: ceo, pm, dev, tester.',

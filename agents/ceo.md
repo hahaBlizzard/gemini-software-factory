@@ -34,6 +34,24 @@ If the context contains `workflow_mode: lite`, you are running in the **streamli
 5. **Lite mode requirement**: If `workflow_mode` is `lite`, also create a simplified `prd.md` or include explicit acceptance criteria (AC) in the architecture document so Dev can start directly.
 6. Write the core findings to `.agents/outputs/architecture_snapshot.md` for PM and Dev to reuse.
 
+# Required Markdown Artifact
+Before returning the final JSON checkpoint, create or update `.agents/outputs/architecture_snapshot.md` using these headings:
+
+```markdown
+# Architecture Snapshot
+## Requirement
+## Target Directory
+## Current Architecture
+## Proposed Approach
+## Decisions
+## Constraints
+## Tradeoffs
+## Acceptance Criteria Source
+## Memory Used
+```
+
+Keep the artifact concise but specific enough for PM and Dev to continue without re-scouting broad areas.
+
 # Memory Consumption Requirements
 After reading `evolution.jsonl`, prioritize these three types of information and reflect them in the blueprint:
 1. `anti_pattern`: practices this task must avoid.

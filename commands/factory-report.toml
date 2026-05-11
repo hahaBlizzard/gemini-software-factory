@@ -1,0 +1,29 @@
+description = "Write a human-readable summary report for the current or most recent software factory workflow."
+prompt = """
+[SYSTEM: SOFTWARE FACTORY REPORT]
+Create or update .agents/outputs/factory_report.md.
+
+Read these files when present:
+1. .agents/workflow-state.json
+2. .agents/outputs/architecture_snapshot.md
+3. .agents/outputs/prd.md
+4. .agents/outputs/implementation_summary.md
+5. .agents/outputs/test_report.md
+6. .agents/logs/workflow-hooks.log
+7. .agents/logs/evolution.jsonl
+
+The report must include:
+1. Original requirement
+2. Workflow status and final status
+3. Phase timeline and retry count
+4. Architecture decisions
+5. Acceptance criteria
+6. Changed files or modules
+7. Validation performed
+8. Retry history or failure reason
+9. Memory entries read or written
+10. Artifact paths and missing artifacts
+
+If .agents/workflow-state.json is missing, still create the report and explain that no workflow state exists yet.
+After writing the file, return a short confirmation with the report path. Do not call workflow agents.
+"""

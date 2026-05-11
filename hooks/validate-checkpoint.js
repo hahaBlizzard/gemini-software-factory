@@ -1,6 +1,17 @@
 #!/usr/bin/env node
 const fs = require('fs');
-const { readState, writeState, appendLog } = require('./shared');
+const {
+  readState,
+  writeState,
+  appendLog,
+  ARTIFACTS,
+  MANAGEMENT_COMMANDS,
+  startPhase,
+  completePhase,
+  artifactUpdatedSincePhaseStart,
+  validateNewMemoryEntries,
+  writeFactoryReport,
+} = require('./shared');
 
 /**
  * Robustly cleans "dirty" JSON from LLMs.
@@ -169,22 +180,29 @@ function expectedPhaseOutput(state, payload) {
 function advanceState(state, payload) {
   const current = state.current_phase;
   const status = (payload.status || '').toUpperCase();
+  completePhase(state, current, payload);
 
+  let nextPhase = null;
   if (current === 'ceo') {
-    state.current_phase = state.fast_run ? 'dev' : 'pm';
+    nextPhase = state.fast_run ? 'dev' : 'pm';
   } else if (current === 'pm') {
-    state.current_phase = 'dev';
+    nextPhase = 'dev';
   } else if (current === 'dev') {
-    state.current_phase = 'tester';
+    nextPhase = 'tester';
   } else if (current === 'tester') {
     if (status === 'RETRY_REQUIRED') {
-      state.current_phase = 'dev';
       state.retry_count = (state.retry_count || 0) + 1;
+      nextPhase = 'dev';
     } else if (status === 'FACTORY_WORKFLOW_COMPLETED') {
       state.status = 'completed';
       state.current_phase = null;
     }
   }
+
+  if (nextPhase) {
+    startPhase(state, nextPhase);
+  }
+
   // Reset structural validation retry count on success
   state.validation_retry_count = 0;
 }
@@ -201,6 +219,43 @@ function autoHandoffToTesterResponse() {
     reason: 'Dev checkpoint accepted. Transitioning to Tester validation.',
     systemMessage: 'Software Factory accepted the Dev checkpoint and advanced to Tester. Please call the tester sub-agent.'
   };
+}
+
+function validatePhaseSideEffects(state, payload) {
+  const phase = (state.current_phase || '').toLowerCase();
+  const status = (payload.status || '').toUpperCase();
+
+  if (phase === 'dev') {
+    const artifact = artifactUpdatedSincePhaseStart(state, ARTIFACTS.implementation);
+    if (!artifact.ok) {
+      return {
+        ok: false,
+        error: `Dev must create or update ${ARTIFACTS.implementation}. ${artifact.error}`,
+      };
+    }
+  }
+
+  if (phase === 'tester') {
+    const artifact = artifactUpdatedSincePhaseStart(state, ARTIFACTS.testReport);
+    if (!artifact.ok) {
+      return {
+        ok: false,
+        error: `Tester must create or update ${ARTIFACTS.testReport}. ${artifact.error}`,
+      };
+    }
+
+    const memoryValidation = validateNewMemoryEntries(state, {
+      requireEntry: status === 'RETRY_REQUIRED',
+    });
+    if (!memoryValidation.ok) {
+      return {
+        ok: false,
+        error: `Tester memory validation failed. ${memoryValidation.error}`,
+      };
+    }
+  }
+
+  return { ok: true };
 }
 
 function parseSlashCommand(text) {
@@ -226,7 +281,7 @@ function main() {
   }
 
   // Bypass validation for management commands marked in state
-  if (state.management_command && ['factory-status', 'factory-reset', 'factory-doctor'].includes(state.management_command)) {
+  if (state.management_command && MANAGEMENT_COMMANDS.has(state.management_command)) {
     appendLog(`Management Bypass: ${state.management_command}`);
     delete state.management_command;
     writeState(state);
@@ -274,13 +329,48 @@ function main() {
     return;
   }
 
-  if ((state.retry_count || 0) >= 3 && payload.status === 'RETRY_REQUIRED') {
+  const payloadStatus = (payload.status || '').toUpperCase();
+
+  if ((state.retry_count || 0) >= 3 && payloadStatus === 'RETRY_REQUIRED') {
     appendLog(`RETRY LIMIT REACHED | Count: ${state.retry_count}`);
+    state.last_checkpoint = payload;
+    completePhase(state, state.current_phase, payload);
+    state.status = 'failed';
+    state.current_phase = null;
+    writeFactoryReport({
+      state,
+      finalStatus: 'failed',
+      reason: 'Tester requested another retry after the configured retry limit was reached.',
+      note: 'Retry limit exhaustion was detected by validate-checkpoint.js.',
+    });
+    writeState(state);
     console.log(JSON.stringify({
       decision: 'block',
       reason: 'Retry limit reached. Stop requesting another dev retry and report failure clearly.',
       systemMessage: 'Software Factory retry guard blocked a fourth retry.'
     }));
+    return;
+  }
+
+  const sideEffects = validatePhaseSideEffects(state, payload);
+  if (!sideEffects.ok) {
+    appendLog(`SIDE EFFECT VALIDATION FAILURE | ${sideEffects.error}`);
+    state.validation_retry_count = (state.validation_retry_count || 0) + 1;
+    writeState(state);
+
+    if (state.validation_retry_count >= 5) {
+      console.log(JSON.stringify({
+        decision: 'block',
+        reason: 'CRITICAL: Side-effect validation failed too many times. Manual intervention required.',
+        systemMessage: `Software Factory blocked due to persistent side-effect failures in phase '${state.current_phase}'.`
+      }));
+    } else {
+      console.log(JSON.stringify({
+        decision: 'block',
+        reason: `VALIDATION ERROR in phase '${state.current_phase}': ${sideEffects.error}\n\nPlease create or update the required artifact/memory file and retry. Attempt ${state.validation_retry_count}/5.`,
+        systemMessage: `Software Factory side-effect guard rejected the response for phase '${state.current_phase}'.`
+      }));
+    }
     return;
   }
 

@@ -16,6 +16,7 @@ Workflow policy:
 - `/factory-status` reports the current phase and progress.
 - `/factory-reset` clears the active workflow state.
 - `/factory-doctor` validates the local environment and hook setup.
+- `/factory-report` writes `.agents/outputs/factory_report.md` from the current workflow state and artifacts.
 - A phase is complete only when the delegated sub-agent returns a valid checkpoint JSON object.
 - Dev success automatically hands off to Tester validation. Tester retry output must stop for user review before returning to Dev.
 - If the workflow guard says there is no active workflow, instruct the user to run `/factory-run <requirement>` (or `/factory-lite`).

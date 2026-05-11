@@ -12,6 +12,12 @@ The user wants to reset the workflow.
   "retry_count": 0,
   "validation_retry_count": 0,
   "last_checkpoint": null,
+  "workflow_started_at": null,
+  "phase_started_at": null,
+  "phase_completed_at": null,
+  "phase_history": [],
+  "phase_artifact_mtimes": {},
+  "phase_memory_line_count": 0,
   "updated_at": "[CURRENT_TIMESTAMP]"
 }
 2. Confirm the reset with a short message.

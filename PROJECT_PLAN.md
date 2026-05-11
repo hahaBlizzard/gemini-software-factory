@@ -61,9 +61,9 @@ Outcome: another user can install, understand, and debug the extension.
 
 - [x] Replace placeholder metadata in `gemini-extension.json`.
 - [x] Add `README.md` with install, link, and first-run instructions.
-- [ ] Add a short demo transcript for `/factory-run` and `/factory-continue`.
+- [x] Add a short demo transcript for `/factory-run` and `/factory-continue`.
 - [x] Add license file.
-- [ ] Verify UTF-8 rendering for prompts, agents, and commands.
+- [x] Verify UTF-8 rendering for prompts, agents, and commands.
 - [x] Add `/factory-status`.
 - [x] Add `/factory-reset`.
 - [x] Add `/factory-doctor`.
@@ -71,19 +71,23 @@ Outcome: another user can install, understand, and debug the extension.
 Done when: the extension can be linked or installed fresh and the user can
 diagnose common setup problems without reading source code.
 
+UTF-8 verification note: README files, agent prompts, and command files decode
+as UTF-8 without `U+FFFD` replacement characters. Chinese mojibake observed in
+PowerShell output is terminal decoding, not file corruption.
+
 ## Phase 3: Human-Readable Artifacts
 
 Outcome: each workflow run leaves useful review material for humans and later
 agents.
 
-- [ ] Standardize `.agents/outputs/architecture_snapshot.md`.
-- [ ] Standardize `.agents/outputs/prd.md`.
-- [ ] Add `.agents/outputs/implementation_summary.md`.
-- [ ] Add `.agents/outputs/test_report.md`.
-- [ ] Add `/factory-report`.
-- [ ] Include requirement, decisions, AC, changed files, validation, retries,
+- [x] Standardize `.agents/outputs/architecture_snapshot.md`.
+- [x] Standardize `.agents/outputs/prd.md`.
+- [x] Add `.agents/outputs/implementation_summary.md`.
+- [x] Add `.agents/outputs/test_report.md`.
+- [x] Add `/factory-report`.
+- [x] Include requirement, decisions, AC, changed files, validation, retries,
   memory usage, and final status in the report.
-- [ ] Update agent prompts so Markdown artifacts and JSON checkpoints are both
+- [x] Update agent prompts so Markdown artifacts and JSON checkpoints are both
   required.
 
 Done when: after a run, a human can read the outputs folder and understand what
@@ -93,14 +97,14 @@ was planned, changed, tested, retried, and concluded.
 
 Outcome: important workflow rules are enforced by code instead of prompts alone.
 
-- [ ] Add `BeforeToolSelection` filtering for the active phase agent.
-- [ ] Block workflow agents when no workflow is active.
-- [ ] Require Dev to produce `implementation_summary.md`.
-- [ ] Require Tester to produce or update `test_report.md`.
-- [ ] Detect retry limit exhaustion and produce a clear failure report.
-- [ ] Validate memory JSONL entries before accepting Tester fail/pass memory.
-- [ ] Record phase start and end timestamps.
-- [ ] Decide how to handle destructive shell commands during active workflows.
+- [x] Add `BeforeToolSelection` filtering for the active phase agent.
+- [x] Block workflow agents when no workflow is active.
+- [x] Require Dev to produce `implementation_summary.md`.
+- [x] Require Tester to produce or update `test_report.md`.
+- [x] Detect retry limit exhaustion and produce a clear failure report.
+- [x] Validate memory JSONL entries before accepting Tester fail/pass memory.
+- [x] Record phase start and end timestamps.
+- [x] Decide how to handle destructive shell commands during active workflows.
 
 Done when: the most important policy failures are blocked or reported by hooks,
 not merely described in prompts.

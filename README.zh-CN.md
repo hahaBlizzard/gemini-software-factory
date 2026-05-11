@@ -10,6 +10,7 @@
 - 阻止错误的 agent 在错误阶段运行。
 - 在工作流进入下一阶段前验证每个 agent 的 checkpoint。
 - Dev 成功完成后，可自动交接给 Tester 验证。
+- 写入人类可读产物，并通过 `/factory-report` 生成最终报告。
 
 ## 项目结构
 
@@ -91,6 +92,30 @@ gemini extensions link .
 /factory-lite Build a small CLI tool that validates JSON files.
 ```
 
+## 演示 Transcript
+
+```text
+> /factory-init
+Initialization complete. Use /factory-run <requirement> to start the software factory.
+
+> /factory-run Build a small CLI tool that validates JSON files.
+{"current_phase":"ceo","status":"WAITING_FOR_USER_APPROVAL","checkpoint":"CEO_BLUEPRINT_READY","next_command":"/factory-continue","message":"CEO blueprint and architecture snapshot are ready."}
+
+> /factory-continue
+{"current_phase":"pm","status":"WAITING_FOR_USER_APPROVAL","checkpoint":"PM_PRD_READY","next_command":"/factory-continue","message":"PRD and acceptance criteria are ready."}
+
+> /factory-continue
+{"current_phase":"dev","status":"WAITING_FOR_USER_APPROVAL","checkpoint":"DEV_IMPLEMENTATION_COMPLETED","next_command":"auto:tester","message":"Implementation summary is ready; Tester will validate automatically."}
+
+> auto handoff
+{"current_phase":"tester","status":"FACTORY_WORKFLOW_COMPLETED","checkpoint":"TESTER_PASS","result":"PASS","message":"Tester accepted the implementation."}
+
+> /factory-report
+Report written to .agents/outputs/factory_report.md.
+```
+
+如果 Tester 返回 `RETRY_REQUIRED`，先查看 `.agents/outputs/test_report.md`，确认修复建议后再运行 `/factory-continue` 把任务交回 Dev。
+
 ## 工作流
 
 默认工作流：
@@ -100,6 +125,18 @@ CEO -> PM -> Dev -> Tester
 ```
 
 每个 agent 都必须返回有效的 JSON checkpoint。Hooks 会注入当前工作流上下文、阻止非法阶段跳转，并在每个 agent 运行后验证 checkpoint 输出。
+
+每个阶段也会在 `.agents/outputs/` 下写入 Markdown 产物：
+
+- `architecture_snapshot.md`
+- `prd.md`
+- `implementation_summary.md`
+- `test_report.md`
+- `factory_report.md`
+
+## 编码说明
+
+仓库中的 prompt、command 和文档使用 UTF-8。若 PowerShell 中显示中文 mojibake，通常是终端解码问题，不代表文件损坏；文件本身应能以 UTF-8 解码且不包含 `U+FFFD` 替换字符。
 
 ## 路线图
 
