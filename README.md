@@ -1,20 +1,47 @@
-# Gemini Software Factory
+<p align="center">
+  <img src="assets/readme-hero.svg" alt="Gemini Software Factory workflow banner" width="100%">
+</p>
 
-[Chinese documentation](README.zh-CN.md)
+<h1 align="center">Gemini Software Factory</h1>
 
-A guarded multi-agent workflow extension for Gemini CLI. It routes a software
-requirement through CEO, PM, Dev, and Tester agents, while hooks enforce phase
-gates and checkpoint JSON so each step stays inspectable.
+<p align="center">
+  A guarded multi-agent workflow extension for Gemini CLI that turns a software
+  requirement into architecture, PRD, implementation, validation, reports, and
+  reusable memory.
+</p>
 
-## What It Does
+<p align="center">
+  <a href="README.zh-CN.md"><img alt="Chinese docs" src="https://img.shields.io/badge/docs-%E4%B8%AD%E6%96%87-0f766e?style=for-the-badge"></a>
+  <img alt="Gemini CLI extension" src="https://img.shields.io/badge/Gemini%20CLI-extension-2563eb?style=for-the-badge">
+  <img alt="Node hooks" src="https://img.shields.io/badge/hooks-Node.js-16a34a?style=for-the-badge&logo=nodedotjs&logoColor=white">
+  <img alt="License MIT" src="https://img.shields.io/badge/license-MIT-d97706?style=for-the-badge">
+</p>
 
-- Starts a full workflow with `/factory-run <requirement>`.
-- Starts a streamlined workflow with `/factory-lite <requirement>`.
-- Advances an active workflow with `/factory-continue`.
-- Blocks the wrong agent from running in the wrong phase.
-- Validates each agent checkpoint before the workflow can move on.
-- Automatically hands off successful Dev work to Tester validation.
-- Writes human-readable artifacts and a final `/factory-report`.
+## Why It Exists
+
+Coding agents are fast, but serious software work needs a trail: who planned
+the change, what was accepted, what was tested, and what should be remembered.
+Software Factory adds a small state machine around Gemini CLI so every run is
+guarded, inspectable, and recoverable.
+
+## Highlights
+
+| Capability | What You Get |
+| --- | --- |
+| <img src="https://img.shields.io/badge/01-Phase%20Gates-2563eb?style=flat-square" alt="Phase Gates"> | CEO, PM, Dev, and Tester run only in the approved order. |
+| <img src="https://img.shields.io/badge/02-JSON%20Checkpoints-0f766e?style=flat-square" alt="JSON Checkpoints"> | Every phase must return a machine-readable checkpoint before advancing. |
+| <img src="https://img.shields.io/badge/03-Markdown%20Artifacts-d97706?style=flat-square" alt="Markdown Artifacts"> | Architecture, PRD, implementation summary, test report, and final report are written under `.agents/outputs/`. |
+| <img src="https://img.shields.io/badge/04-Safer%20Retries-be123c?style=flat-square" alt="Safer Retries"> | Tester can send work back to Dev with root-cause guidance, while retry limits prevent endless loops. |
+| <img src="https://img.shields.io/badge/05-Project%20Memory-475569?style=flat-square" alt="Project Memory"> | Useful lessons can be preserved in `.agents/logs/evolution.jsonl`. |
+
+## Workflow At A Glance
+
+```text
+Requirement -> CEO -> PM -> Dev -> Tester -> Report
+                      ^              |
+                      | retry        |
+                      +--------------+
+```
 
 ## Project Structure
 
