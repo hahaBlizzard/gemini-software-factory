@@ -36,11 +36,14 @@ guarded, inspectable, and recoverable.
 
 ## Workflow At A Glance
 
-```text
-Requirement -> CEO -> PM -> Dev -> Tester -> Report
-                      ^              |
-                      | retry        |
-                      +--------------+
+```mermaid
+flowchart LR
+  R["Requirement"] --> CEO["CEO"]
+  CEO --> PM["PM"]
+  PM --> DEV["Dev"]
+  DEV --> TESTER["Tester"]
+  TESTER --> REPORT["Report"]
+  TESTER -- "retry" --> DEV
 ```
 
 ## Project Structure
